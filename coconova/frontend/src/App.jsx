@@ -1,36 +1,34 @@
-import { useState } from 'react'
-import WovenDivider from './components/WovenDivider'
+import { useState, useEffect } from 'react'
 import ContactForm from './components/ContactForm'
+import Reveal from './components/Reveal'
+import ScrollProgress from './components/ScrollProgress'
+import CinematicHero from './components/CinematicHero'
+import Marquee from './components/Marquee'
 import './App.css'
 
 const PRODUCTS = [
-  { name: 'Coir Cups', desc: 'Single-use replacement cups molded from pressed coir, compostable end to end.' },
-  { name: 'Coir Tea & Coffee Cups / Gilas', desc: 'Traditional gilas and cups for hot beverages, built for cafés and hotels.' },
-  { name: 'Coir Planters & Garden Pots', desc: 'Breathable, biodegradable pots that feed the soil as they break down.' },
-  { name: 'Coir Kitchen Scrubbers', desc: 'Naturally abrasive, plastic-free scrubbers for daily kitchen use.' },
-  { name: 'Custom Coir Molded Products', desc: 'Bespoke shapes and forms pressed to your specification.' },
-  { name: 'Private Label & OEM', desc: 'White-label manufacturing with your branding, ready for retail.' },
-  { name: 'Coconut Disposables', desc: 'A full range of single-use coconut-based disposable items.' },
-  { name: 'Coconut Product Range', desc: 'Broader coconut-derived product lines, built to order.' },
+  { name: 'Coir Cups', desc: 'Pressed from pure coconut fiber. No plastic lining, no wax coating. Returns to the earth in weeks, not centuries.', image: '/products/plain-cup.jpg' },
+  { name: 'Tea & Coffee Cups, Gilas', desc: 'The gilas your grandmother used, reimagined for cafés. Thick-walled, naturally insulated, fully compostable.', image: '/products/cup-spoon.jpg' },
+  { name: 'Planters & Garden Pots', desc: "Pots that don't just hold soil, they feed it as the coir breaks down around the roots.", image: '/products/painted-planter.jpg' },
+  { name: 'Kitchen Scrubbers', desc: 'Naturally abrasive coir, stitched tight to outlast plastic scourers, then compost instead of clogging a landfill.', image: '/products/scrubbers-stack.jpg' },
+  { name: 'Custom Molded Products', desc: 'Trays, bowls, and bespoke forms pressed to your exact specification.', image: '/products/tray-bowl.jpg' },
+  { name: 'Coconut Disposables', desc: 'A complete single-use line, built for one use and engineered to vanish after.', image: '/products/scrubbers-mat.jpg' },
 ]
 
 const WHY = [
   '100% natural coconut coir',
-  'Eco-friendly & biodegradable',
-  'Strong and durable products',
-  'Sustainable manufacturing process',
-  'Premium quality assurance',
-  'Bulk supply & export ready',
-  'Custom design and branding available',
+  'Fully biodegradable, zero plastic',
+  'Food-safe, durable finish',
+  'Low-waste manufacturing process',
+  'Bulk supply & export logistics',
+  'Private-label & custom branding',
 ]
 
-const PROCESS = [
-  { step: '01', title: 'Source', desc: 'High-quality coconut husks are sourced from trusted regional suppliers.' },
-  { step: '02', title: 'Clean', desc: 'Husks are cleaned to separate raw coir fiber from pith and debris.' },
-  { step: '03', title: 'Dry', desc: 'Fiber is dried to the moisture level required for consistent molding.' },
-  { step: '04', title: 'Mold & Press', desc: 'Coir is pressed and molded into the target product shape.' },
-  { step: '05', title: 'Finish', desc: 'Each piece is trimmed, treated, and finished for a clean, food-safe surface.' },
-  { step: '06', title: 'Inspect', desc: 'Every batch passes quality inspection before it leaves the facility.' },
+const SYSTEM = [
+  { step: '01', title: 'Source', product: 'RAW COCONUT HUSK', desc: 'Husks arrive fresh from regional coconut farms, selected for fiber quality and consistency before a single piece is molded.', image: '/products/workshop-group.jpg' },
+  { step: '02', title: 'Clean', product: 'WASHED COIR FIBER', desc: 'Fiber is separated from pith and washed until nothing but strong, usable coir remains.', image: '/products/scrubbers-mat.jpg' },
+  { step: '03', title: 'Mold & Press', product: 'PRESSED FORM', desc: 'Fiber is pressed under heat and pressure into the final cup, bowl, or planter shape.', image: '/products/tray-bowl.jpg' },
+  { step: '04', title: 'Finish & Inspect', product: 'READY TO SHIP', desc: 'Edges trimmed, surfaces treated, every batch checked by hand before it clears the floor.', image: '/products/painted-planter.jpg' },
 ]
 
 const INDUSTRIES = [
@@ -43,17 +41,34 @@ function useMobileNav() {
   return { open, toggle: () => setOpen(o => !o), close: () => setOpen(false) }
 }
 
+function useScrolledHeader() {
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > window.innerHeight * 0.72)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return scrolled
+}
+
 export default function App() {
   const nav = useMobileNav()
+  const scrolled = useScrolledHeader()
 
   return (
     <>
-      <header className="site-header">
+      <ScrollProgress />
+      <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
         <div className="container header-inner">
+          <nav className="main-nav main-nav-left">
+            <a href="#products">Products</a>
+            <a href="#process">Process</a>
+          </nav>
           <a href="#top" className="wordmark">Coco<span>Nova</span></a>
-          <nav className={`main-nav ${nav.open ? 'open' : ''}`}>
-            <a href="#products" onClick={nav.close}>Products</a>
-            <a href="#process" onClick={nav.close}>Process</a>
+          <nav className={`main-nav main-nav-right ${nav.open ? 'open' : ''}`}>
             <a href="#industries" onClick={nav.close}>Industries</a>
             <a href="#contact" onClick={nav.close} className="btn btn-primary btn-small">Get a quote</a>
           </nav>
@@ -64,135 +79,120 @@ export default function App() {
       </header>
 
       <main id="top">
-        {/* HERO */}
-        <section className="hero">
-          <div className="hero-fiber-bg" aria-hidden="true" />
-          <div className="container hero-inner">
-            <p className="eyebrow">CocoNova Industrial Pvt Ltd</p>
-            <h1 className="hero-title">
-              Nature Inspired.<br /><span>Future Focused.</span>
+        {/* CINEMATIC HERO */}
+        <section className="hero-cinema">
+          <CinematicHero />
+          <div className="container hero-cinema-inner">
+            <p className="eyebrow hero-eyebrow">CocoNova Industrial Pvt Ltd</p>
+            <h1 className="hero-cinema-title">
+              Coconut Coir,<br />Engineered for a<br /><span>Plastic-Free Future.</span>
             </h1>
-            <p className="hero-sub">
-              We transform renewable coconut fiber into sustainable, durable, biodegradable
-              products — replacing single-use plastic, batch by batch.
+            <p className="hero-cinema-sub">
+              Premium eco-friendly manufacturing, pressed from renewable coconut fiber.
+              Bulk orders, OEM, and export supply.
             </p>
             <div className="hero-actions">
               <a href="#contact" className="btn btn-primary">Request bulk quote</a>
-              <a href="#products" className="btn btn-ghost">See what we manufacture</a>
+              <a href="#products" className="btn btn-ghost-light">See the collection</a>
             </div>
           </div>
+          <div className="scroll-cue">Scroll down</div>
         </section>
 
-        <WovenDivider />
-
-        {/* ABOUT / MISSION / VISION */}
-        <section className="section about">
-          <div className="container about-grid">
-            <div>
-              <p className="eyebrow">Who we are</p>
-              <h2>Manufacturing that starts with a husk, not a barrel of plastic.</h2>
-              <p className="body-lg">
-                CocoNova is an eco-friendly manufacturing company producing premium-quality
-                goods from natural coconut coir. Our process combines modern technique with
-                natural raw material to deliver products that meet high standards of quality,
-                strength, and sustainability.
-              </p>
-            </div>
-            <div className="mission-vision">
-              <div className="mv-card">
-                <p className="eyebrow">Mission</p>
-                <p>Replace single-use plastic with eco-friendly coconut coir alternatives, promoting sustainable manufacturing and environmental responsibility.</p>
-              </div>
-              <div className="mv-card">
-                <p className="eyebrow">Vision</p>
-                <p>To become a trusted global brand in eco-friendly coconut coir products through innovation, quality, and sustainability.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* PRODUCTS */}
-        <section className="section products" id="products">
+        {/* COLLECTION - horizontal premium carousel */}
+        <section className="section collection" id="products">
           <div className="container">
-            <p className="eyebrow">What we manufacture</p>
-            <h2>Eight product lines, one raw material.</h2>
-            <div className="product-grid">
-              {PRODUCTS.map((p) => (
-                <div className="product-card" key={p.name}>
+            <Reveal>
+              <p className="eyebrow">The collection</p>
+              <h2>Manufactured, not mass produced.</h2>
+            </Reveal>
+          </div>
+          <div className="product-rail">
+            {PRODUCTS.map((p, i) => (
+              <Reveal as="div" key={p.name} delay={i * 70} className="product-card">
+                <div className="product-image">
+                  <img src={p.image} alt={p.name} loading="lazy" />
+                </div>
+                <div className="product-card-body">
+                  <span className="product-index">{String(i + 1).padStart(2, '0')}</span>
                   <h3>{p.name}</h3>
                   <p>{p.desc}</p>
                 </div>
-              ))}
-            </div>
+              </Reveal>
+            ))}
           </div>
         </section>
 
-        <WovenDivider flip />
+        {/* PHILOSOPHY - full bleed statement */}
+        <section className="philosophy">
+          <div className="philosophy-bg" style={{ backgroundImage: 'url(/products/workshop-group.jpg)' }} />
+          <div className="philosophy-overlay" />
+          <div className="container philosophy-inner">
+            <Reveal>
+              <p className="eyebrow philosophy-eyebrow">Our philosophy</p>
+              <h2 className="philosophy-statement">
+                Every product we press is designed to disappear, not to last forever in a landfill.
+              </h2>
+              <a href="#process" className="btn btn-ghost-light">Explore our process</a>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* SYSTEM - big numbered editorial steps */}
+        <section className="section system" id="process">
+          <div className="container">
+            <Reveal>
+              <p className="eyebrow">The manufacturing system</p>
+              <h2>Four stages that turn husk into product.</h2>
+            </Reveal>
+          </div>
+          <div className="system-list">
+            {SYSTEM.map((s, i) => (
+              <Reveal as="div" key={s.step} delay={i * 100} className={`system-row ${i % 2 === 1 ? 'reverse' : ''}`}>
+                <div className="system-image">
+                  <img src={s.image} alt={s.title} loading="lazy" />
+                </div>
+                <div className="system-text">
+                  <span className="system-step">{s.step}/</span>
+                  <h3>{s.title}</h3>
+                  <p className="system-product">{s.product}</p>
+                  <p className="system-desc">{s.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
 
         {/* WHY CHOOSE US */}
         <section className="section why">
           <div className="container why-grid">
-            <div>
+            <Reveal>
               <p className="eyebrow">Why CocoNova</p>
               <h2>Built to replace plastic, not imitate it.</h2>
-            </div>
+            </Reveal>
             <ul className="why-list">
-              {WHY.map((w) => (
-                <li key={w}><span className="check">✓</span>{w}</li>
+              {WHY.map((w, i) => (
+                <Reveal as="li" key={w} delay={i * 60}>
+                  <span className="check">/</span>
+                  <span>{w}</span>
+                </Reveal>
               ))}
             </ul>
           </div>
         </section>
 
-        {/* PROCESS */}
-        <section className="section process" id="process">
-          <div className="container">
-            <p className="eyebrow">Our manufacturing process</p>
-            <h2>From husk to finished product, six controlled stages.</h2>
-            <div className="process-track">
-              {PROCESS.map((s) => (
-                <div className="process-step" key={s.step}>
-                  <span className="process-number">{s.step}</span>
-                  <h3>{s.title}</h3>
-                  <p>{s.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* INDUSTRIES */}
+        {/* INDUSTRIES - marquee */}
         <section className="section industries" id="industries">
           <div className="container">
-            <p className="eyebrow">Industries we serve</p>
-            <h2>From café counters to export containers.</h2>
-            <div className="industry-tags">
-              {INDUSTRIES.map((i) => (
-                <span className="industry-tag" key={i}>{i}</span>
-              ))}
-            </div>
+            <Reveal><p className="eyebrow">Industries we serve</p></Reveal>
           </div>
-        </section>
-
-        <WovenDivider />
-
-        {/* SUSTAINABILITY */}
-        <section className="section sustainability">
-          <div className="container sustainability-inner">
-            <p className="eyebrow">Sustainability commitment</p>
-            <h2>Coconut waste in. A greener future out.</h2>
-            <p className="body-lg">
-              Sustainability is at the heart of everything we do. By converting coconut waste
-              into valuable products, we reduce environmental impact and contribute to a
-              cleaner planet — one cup, planter, and scrubber at a time.
-            </p>
-          </div>
+          <Marquee items={INDUSTRIES} />
         </section>
 
         {/* CONTACT */}
         <section className="section contact" id="contact">
           <div className="container contact-grid">
-            <div>
+            <Reveal>
               <p className="eyebrow">Contact us</p>
               <h2>Bulk orders, OEM manufacturing, export supply.</h2>
               <div className="contact-details">
@@ -201,15 +201,25 @@ export default function App() {
                 <p><a href="mailto:ummeshswami2000@gmail.com">ummeshswami2000@gmail.com</a></p>
                 <p><a href="tel:+919983552027">+91 99835 52027</a></p>
               </div>
-            </div>
-            <ContactForm />
+            </Reveal>
+            <Reveal delay={120}>
+              <ContactForm />
+            </Reveal>
           </div>
         </section>
       </main>
 
       <footer className="site-footer">
+        <div className="container footer-top">
+          <span className="wordmark footer-wordmark">Coco<span>Nova</span></span>
+          <div className="footer-links">
+            <a href="#products">Products</a>
+            <a href="#process">Process</a>
+            <a href="#industries">Industries</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
         <div className="container footer-inner">
-          <span className="wordmark">Coco<span>Nova</span></span>
           <p>© {new Date().getFullYear()} CocoNova Industrial Pvt Ltd. All rights reserved.</p>
         </div>
       </footer>

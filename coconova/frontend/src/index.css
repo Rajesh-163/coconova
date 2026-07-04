@@ -1,19 +1,24 @@
 :root {
-  --husk-black: #1a130d;
-  --fiber-brown: #3d2b1c;
-  --fiber-brown-light: #59402a;
-  --coir-tan: #cba876;
-  --coir-tan-dim: #a88a5f;
-  --leaf-green: #7a9a52;
-  --leaf-green-dim: #5c7a3a;
-  --cream-pulp: #f1e8d8;
-  --rust-clay: #b4622f;
+  --ink: #1B140D;
+  --canvas: #FAF7F1;
+  --canvas-warm: #F2ECDE;
+  --panel: #EFE7D4;
+  --palm: #2F4A2E;
+  --palm-deep: #1E3220;
+  --palm-light: #5C7F52;
+  --gold: #B8935A;
+  --gold-light: #D4B583;
+  --text-muted: rgba(27, 20, 13, 0.62);
+  --white: #FFFFFF;
+  --line: rgba(27, 20, 13, 0.13);
+  --line-strong: rgba(27, 20, 13, 0.24);
+  --clay: #A85C32;
 
   --font-display: 'Fraunces', serif;
   --font-body: 'Work Sans', sans-serif;
   --font-mono: 'Space Mono', monospace;
 
-  --max-width: 1180px;
+  --max-width: 1220px;
 }
 
 * {
@@ -37,8 +42,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--husk-black);
-  color: var(--cream-pulp);
+  background: var(--canvas);
+  color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -47,7 +52,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 700;
   margin: 0;
-  color: var(--cream-pulp);
+  color: var(--ink);
 }
 
 p {
@@ -74,7 +79,7 @@ img {
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--coir-tan);
+  color: var(--palm);
 }
 
 .container {
@@ -93,6 +98,6 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--leaf-green);
+  outline: 2px solid var(--palm);
   outline-offset: 3px;
 }
